@@ -1,8 +1,9 @@
-import cors from "cors";
-import dotenv from "dotenv";
-import express from "express";
-import connectDB from "./config/db";
-import authRoutes from "./routes/authRoutes";
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import connectDB from './config/db';
+import authRoutes from './routes/authRoutes';
+import conversationRoutes from './routes/conversationRoutes';
 
 dotenv.config();
 
@@ -14,10 +15,11 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/conversations', conversationRoutes);
 
-app.get("/", (req, res) => {
-  res.json({ message: "AI Interview Assistant API is running" });
+app.get('/', (req, res) => {
+  res.json({ message: 'AI Interview Assistant API is running' });
 });
 
 app.listen(PORT, () => {
