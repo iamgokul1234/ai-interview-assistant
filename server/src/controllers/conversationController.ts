@@ -4,11 +4,11 @@ import {
   createConversation,
   getConversations,
   getMessages,
-  saveMessage,
+  sendMessage,
   deleteConversation,
 } from '../services/conversationService';
 
-export const create = async (
+export const createConversationHandler = async (
   req: AuthRequest,
   res: Response
 ): Promise<void> => {
@@ -24,7 +24,7 @@ export const create = async (
   }
 };
 
-export const getAll = async (
+export const getAllConversations = async (
   req: AuthRequest,
   res: Response
 ): Promise<void> => {
@@ -36,7 +36,7 @@ export const getAll = async (
   }
 };
 
-export const fetchMessages = async (
+export const getMessagesHandler = async (
   req: AuthRequest,
   res: Response
 ): Promise<void> => {
@@ -55,31 +55,21 @@ export const addMessage = async (
 ): Promise<void> => {
   try {
     const id = req.params.id as string;
-    const { role, content } = req.body;
+    const { content } = req.body;
 
-    if (!role || !content) {
-      res.status(400).json({ message: 'Role and content are required' });
+    if (!content) {
+      res.status(400).json({ message: 'Content is required' });
       return;
     }
 
-    if (role !== 'user' && role !== 'assistant') {
-      res.status(400).json({ message: 'Role must be user or assistant' });
-      return;
-    }
-
-    const message = await saveMessage(
-      id,
-      req.userId as string,
-      role as 'user' | 'assistant',
-      content
-    );
-    res.status(201).json(message);
+    const messages = await sendMessage(id, req.userId as string, content);
+    res.status(201).json(messages);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
 };
 
-export const remove = async (
+export const deleteConversationHandler = async (
   req: AuthRequest,
   res: Response
 ): Promise<void> => {
