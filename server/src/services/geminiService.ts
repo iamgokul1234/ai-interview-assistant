@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
@@ -19,23 +19,23 @@ Guidelines:
 - Be encouraging and supportive
 - If asked something outside your expertise, politely redirect to interview preparation topics`;
 
-console.log(
-  "Gemini API Key loaded:",
-  process.env.GEMINI_API_KEY ? "YES" : "NO",
-);
-
 export const getAIResponse = async (
   userMessage: string,
-  conversationHistory: { role: string; content: string }[],
+  conversationHistory: { role: string; content: string }[]
 ): Promise<string> => {
+  console.log('getAIResponse called');
+  console.log('API Key exists:', !!process.env.GEMINI_API_KEY);
+  
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    console.log('Creating model...');
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const history = conversationHistory.slice(-10).map((msg) => ({
-      role: msg.role === "user" ? "user" : "model",
+      role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.content }],
     }));
 
+    console.log('Starting chat...');
     const chat = model.startChat({
       history,
       generationConfig: {
@@ -49,17 +49,21 @@ export const getAIResponse = async (
         ? `${systemPrompt}\n\nUser: ${userMessage}`
         : userMessage;
 
+    console.log('Sending message...');
     const result = await chat.sendMessage(fullMessage);
+    console.log('Got response');
     const response = result.response.text();
 
     return response;
   } catch (error: any) {
-    if (error.message?.includes("quota")) {
-      throw new Error("AI service quota exceeded. Please try again later.");
+    console.log('CAUGHT ERROR:', error.message);
+    console.log('FULL ERROR:', JSON.stringify(error, null, 2));
+    if (error.message?.includes('quota')) {
+      throw new Error('AI service quota exceeded. Please try again later.');
     }
-    if (error.message?.includes("API key")) {
-      throw new Error("AI service configuration error.");
+    if (error.message?.includes('API key')) {
+      throw new Error('AI service configuration error.');
     }
-    throw new Error("AI service unavailable. Please try again.");
+    throw new Error('AI service unavailable. Please try again.');
   }
 };

@@ -1,22 +1,22 @@
-import { Response } from 'express';
-import { AuthRequest } from '../middleware/authMiddleware';
+import { Response } from "express";
+import { AuthRequest } from "../middleware/authMiddleware";
 import {
   createConversation,
   getConversations,
   getMessages,
   sendMessage,
   deleteConversation,
-} from '../services/conversationService';
+} from "../services/conversationService";
 
 export const createConversationHandler = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const { title } = req.body;
     const conversation = await createConversation(
       req.userId as string,
-      title || 'New Conversation'
+      title || "New Conversation",
     );
     res.status(201).json(conversation);
   } catch (error: any) {
@@ -26,7 +26,7 @@ export const createConversationHandler = async (
 
 export const getAllConversations = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const conversations = await getConversations(req.userId as string);
@@ -38,7 +38,7 @@ export const getAllConversations = async (
 
 export const getMessagesHandler = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const id = req.params.id as string;
@@ -51,32 +51,37 @@ export const getMessagesHandler = async (
 
 export const addMessage = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
+  console.log("[addMessage] controller hit");
+  console.log("[addMessage] params:", req.params);
+  console.log("[addMessage] body:", req.body);
+  console.log("[addMessage] userId:", req.userId);
   try {
     const id = req.params.id as string;
     const { content } = req.body;
 
     if (!content) {
-      res.status(400).json({ message: 'Content is required' });
+      res.status(400).json({ message: "Content is required" });
       return;
     }
 
     const messages = await sendMessage(id, req.userId as string, content);
     res.status(201).json(messages);
   } catch (error: any) {
+    console.error("[addMessage] ERROR:", error.message);
     res.status(400).json({ message: error.message });
   }
 };
 
 export const deleteConversationHandler = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const id = req.params.id as string;
     await deleteConversation(id, req.userId as string);
-    res.status(200).json({ message: 'Conversation deleted' });
+    res.status(200).json({ message: "Conversation deleted" });
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
