@@ -18,6 +18,7 @@ import {
   sendMessageAPI,
   deleteConversationAPI,
 } from "../services/chatService";
+import ReactMarkdown from "react-markdown";
 
 function ChatPage() {
   const { id } = useParams();
@@ -30,12 +31,11 @@ function ChatPage() {
 
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    }
+    if (!token) navigate("/login");
   }, [token]);
 
   useEffect(() => {
@@ -43,9 +43,7 @@ function ChatPage() {
   }, []);
 
   useEffect(() => {
-    if (id) {
-      loadMessages(id);
-    }
+    if (id) loadMessages(id);
   }, [id]);
 
   useEffect(() => {
@@ -82,6 +80,7 @@ function ChatPage() {
       dispatch(setCurrentConversation(data));
       dispatch(setMessages([]));
       navigate(`/chat/${data._id}`);
+      setSidebarOpen(false);
     } catch (err) {
       console.error("Failed to create conversation");
     }
@@ -112,9 +111,7 @@ function ChatPage() {
     try {
       await deleteConversationAPI(token as string, conversationId);
       dispatch(deleteConversationFromStore(conversationId));
-      if (id === conversationId) {
-        navigate("/chat");
-      }
+      if (id === conversationId) navigate("/chat");
     } catch (err) {
       console.error("Failed to delete conversation");
     }
@@ -132,42 +129,37 @@ function ChatPage() {
     }
   };
 
-  return (
-    <div className="d-flex vh-100">
-      {/* Sidebar */}
-      <div
-        className="d-flex flex-column bg-dark text-white p-3"
-        style={{ width: "260px", minWidth: "260px" }}
-      >
-        <h6 className="mb-3">AI Interview Assistant</h6>
+  const handleConversationClick = (conversationId: string) => {
+    navigate(`/chat/${conversationId}`);
+    setSidebarOpen(false);
+  };
 
-        <button
-          className="btn btn-outline-light btn-sm mb-3"
-          onClick={handleNewChat}
-        >
+  return (
+    <div className="chat-container">
+      {/* Mobile Overlay */}
+      <div
+        className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
+      {/* Sidebar */}
+      <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
+        <p className="sidebar-title">AI Interview Assistant</p>
+
+        <button className="btn-new-chat" onClick={handleNewChat}>
           + New Chat
         </button>
 
-        <div className="flex-grow-1 overflow-auto">
+        <div className="conversations-list">
           {conversations.map((conv) => (
             <div
               key={conv._id}
-              className={`d-flex align-items-center justify-content-between p-2 mb-1 rounded cursor-pointer ${
-                currentConversation?._id === conv._id
-                  ? "bg-secondary"
-                  : "hover-bg"
-              }`}
-              style={{ cursor: "pointer" }}
-              onClick={() => navigate(`/chat/${conv._id}`)}
+              className={`conversation-item ${currentConversation?._id === conv._id ? "active" : ""}`}
+              onClick={() => handleConversationClick(conv._id)}
             >
-              <span
-                className="text-truncate small"
-                style={{ maxWidth: "180px" }}
-              >
-                {conv.title}
-              </span>
+              <span className="conversation-title">{conv.title}</span>
               <button
-                className="btn btn-sm text-danger p-0 ms-1"
+                className="btn-delete"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDelete(conv._id);
@@ -179,64 +171,54 @@ function ChatPage() {
           ))}
         </div>
 
-        <div className="mt-3 border-top pt-3">
-          <small className="text-muted d-block mb-2">{user?.name}</small>
-          <button
-            className="btn btn-outline-danger btn-sm w-100"
-            onClick={handleLogout}
-          >
+        <div className="sidebar-footer">
+          <span className="user-name">{user?.name}</span>
+          <button className="btn-logout" onClick={handleLogout}>
             Logout
           </button>
         </div>
       </div>
 
       {/* Main Chat Area */}
-      <div className="d-flex flex-column flex-grow-1">
+      <div className="chat-main">
         {/* Header */}
-        <div className="border-bottom p-3 bg-white">
-          <h6 className="mb-0">
+        <div className="chat-header">
+          <button className="btn-menu" onClick={() => setSidebarOpen(true)}>
+            ☰
+          </button>
+          <h6 className="chat-header-title">
             {currentConversation
               ? currentConversation.title
-              : "Select or start a new chat"}
+              : "AI Interview Assistant"}
           </h6>
         </div>
 
         {/* Messages */}
-        <div className="flex-grow-1 overflow-auto p-3 bg-light">
+        <div className="messages-container">
           {!currentConversation && (
-            <div className="text-center text-muted mt-5">
-              <h5>Welcome, {user?.name}!</h5>
-              <p>Start a new chat or select an existing one.</p>
+            <div className="welcome-screen">
+              <h2 className="welcome-title">Welcome, {user?.name}!</h2>
+              <p className="welcome-subtitle">
+                Start a new chat to begin your interview preparation.
+              </p>
             </div>
           )}
 
           {messages.map((msg) => (
-            <div
-              key={msg._id}
-              className={`d-flex mb-3 ${
-                msg.role === "user"
-                  ? "justify-content-end"
-                  : "justify-content-start"
-              }`}
-            >
-              <div
-                className={`p-3 rounded ${
-                  msg.role === "user"
-                    ? "bg-primary text-white"
-                    : "bg-white border"
-                }`}
-                style={{ maxWidth: "70%", whiteSpace: "pre-wrap" }}
-              >
-                {msg.content}
+            <div key={msg._id} className={`message-row ${msg.role}`}>
+              <div className={`message-bubble ${msg.role}`}>
+                {msg.role === "user" ? (
+                  msg.content
+                ) : (
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                )}
               </div>
             </div>
           ))}
 
           {sending && (
-            <div className="d-flex justify-content-start mb-3">
-              <div className="p-3 rounded bg-white border">
-                <span className="text-muted">AI is thinking...</span>
-              </div>
+            <div className="message-row assistant">
+              <div className="typing-indicator">AI is thinking...</div>
             </div>
           )}
 
@@ -244,23 +226,23 @@ function ChatPage() {
         </div>
 
         {/* Input */}
-        <div className="border-top p-3 bg-white">
-          <div className="d-flex gap-2">
+        <div className="input-area">
+          <div className="input-wrapper">
             <textarea
-              className="form-control"
-              rows={2}
+              className="chat-input"
+              rows={1}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask an interview question... (Enter to send)"
+              placeholder="Ask an interview question..."
               disabled={!currentConversation || sending}
             />
             <button
-              className="btn btn-primary"
+              className="btn-send"
               onClick={handleSend}
               disabled={!currentConversation || sending || !input.trim()}
             >
-              {sending ? "..." : "Send"}
+              ↑
             </button>
           </div>
         </div>

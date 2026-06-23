@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import type { RootState } from '../redux/store';
-import type { AppDispatch } from '../redux/store';
+import type { RootState, AppDispatch } from '../redux/store';
 import { loginStart, loginSuccess, loginFailure } from '../redux/slices/authSlice';
 import { registerAPI } from '../services/authService';
 
@@ -27,23 +26,19 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div className="card shadow p-4" style={{ width: '100%', maxWidth: '400px' }}>
-        <h2 className="text-center mb-4">AI Interview Assistant</h2>
-        <h5 className="text-center text-muted mb-4">Create your account</h5>
+    <div className="auth-container">
+      <div className="auth-card glass">
+        <h1 className="auth-title">AI Interview Assistant</h1>
+        <p className="auth-subtitle">Create your account</p>
 
-        {error && (
-          <div className="alert alert-danger" role="alert">
-            {error}
-          </div>
-        )}
+        {error && <div className="glass-alert">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Name</label>
+          <div className="form-group">
+            <label className="glass-label">Name</label>
             <input
               type="text"
-              className="form-control"
+              className="glass-input"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
@@ -51,11 +46,11 @@ function RegisterPage() {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Email</label>
+          <div className="form-group">
+            <label className="glass-label">Email</label>
             <input
               type="email"
-              className="form-control"
+              className="glass-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
@@ -63,11 +58,11 @@ function RegisterPage() {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Password</label>
+          <div className="form-group">
+            <label className="glass-label">Password</label>
             <input
               type="password"
-              className="form-control"
+              className="glass-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
@@ -77,16 +72,18 @@ function RegisterPage() {
 
           <button
             type="submit"
-            className="btn btn-primary w-100"
+            className="btn-gradient"
             disabled={loading}
           >
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? 'Registering...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="text-center mt-3">
+        <p className="auth-footer">
           Already have an account?{' '}
-          <Link to="/login">Login here</Link>
+          <Link to="/login" className="auth-link">
+            Login here
+          </Link>
         </p>
       </div>
     </div>
