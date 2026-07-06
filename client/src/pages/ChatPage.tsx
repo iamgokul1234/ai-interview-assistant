@@ -17,6 +17,7 @@ import {
   getMessagesAPI,
   sendMessageAPI,
   deleteConversationAPI,
+  deleteMessagesFromAPI,
 } from "../services/chatService";
 import ReactMarkdown from "react-markdown";
 
@@ -26,12 +27,15 @@ function ChatPage() {
   const navigate = useNavigate();
   const { token, user } = useSelector((state: RootState) => state.auth);
   const { conversations, currentConversation, messages } = useSelector(
-    (state: RootState) => state.chat,
+    (state: RootState) => state.chat
   );
 
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editingContent, setEditingContent] = useState("");
+  const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,7 +78,7 @@ function ChatPage() {
     try {
       const data = await createConversationAPI(
         token as string,
-        "New Conversation",
+        "New Conversation"
       );
       dispatch(addConversation(data));
       dispatch(setCurrentConversation(data));
@@ -97,7 +101,7 @@ function ChatPage() {
       if (!conversationId) {
         const newConv = await createConversationAPI(
           token as string,
-          "New Conversation",
+          "New Conversation"
         );
         dispatch(addConversation(newConv));
         dispatch(setCurrentConversation(newConv));
@@ -109,7 +113,7 @@ function ChatPage() {
       const data = await sendMessageAPI(
         token as string,
         conversationId as string,
-        content,
+        content
       );
       dispatch(addMessage(data.userMessage));
       dispatch(addMessage(data.aiMessage));
@@ -119,6 +123,79 @@ function ChatPage() {
     } finally {
       setSending(false);
     }
+  };
+
+  const handleRetry = async (messageId: string, content: string) => {
+    if (!currentConversation || sending) return;
+    setSending(true);
+    try {
+      await deleteMessagesFromAPI(
+        token as string,
+        currentConversation._id,
+        messageId
+      );
+      const freshMessages = await getMessagesAPI(
+        token as string,
+        currentConversation._id
+      );
+      dispatch(setMessages(freshMessages));
+
+      const data = await sendMessageAPI(
+        token as string,
+        currentConversation._id,
+        content
+      );
+      dispatch(addMessage(data.userMessage));
+      dispatch(addMessage(data.aiMessage));
+      await loadConversations();
+    } catch (err) {
+      console.error("Failed to retry message");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleEditStart = (messageId: string, content: string) => {
+    setEditingMessageId(messageId);
+    setEditingContent(content);
+  };
+
+  const handleEditConfirm = async () => {
+    if (!editingMessageId || !editingContent.trim() || !currentConversation || sending) return;
+    setSending(true);
+    const content = editingContent.trim();
+    setEditingMessageId(null);
+    setEditingContent("");
+    try {
+      await deleteMessagesFromAPI(
+        token as string,
+        currentConversation._id,
+        editingMessageId
+      );
+      const freshMessages = await getMessagesAPI(
+        token as string,
+        currentConversation._id
+      );
+      dispatch(setMessages(freshMessages));
+
+      const data = await sendMessageAPI(
+        token as string,
+        currentConversation._id,
+        content
+      );
+      dispatch(addMessage(data.userMessage));
+      dispatch(addMessage(data.aiMessage));
+      await loadConversations();
+    } catch (err) {
+      console.error("Failed to edit message");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditingMessageId(null);
+    setEditingContent("");
   };
 
   const handleDelete = async (conversationId: string) => {
@@ -219,14 +296,108 @@ function ChatPage() {
           )}
 
           {messages.map((msg) => (
-            <div key={msg._id} className={`message-row ${msg.role}`}>
-              <div className={`message-bubble ${msg.role}`}>
-                {msg.role === "user" ? (
-                  msg.content
-                ) : (
+            <div
+              key={msg._id}
+              className={`message-row ${msg.role}`}
+              onMouseEnter={() => setHoveredMessageId(msg._id)}
+              onMouseLeave={() => setHoveredMessageId(null)}
+            >
+              {msg.role === "user" ? (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px", maxWidth: "70%" }}>
+                  {editingMessageId === msg._id ? (
+                    <div style={{ width: "100%" }}>
+                      <textarea
+                        className="chat-input"
+                        value={editingContent}
+                        onChange={(e) => setEditingContent(e.target.value)}
+                        style={{
+                          background: "rgba(255,255,255,0.1)",
+                          border: "1px solid rgba(139,92,246,0.5)",
+                          borderRadius: "12px",
+                          padding: "10px 14px",
+                          color: "white",
+                          width: "100%",
+                          minHeight: "60px",
+                          marginBottom: "8px",
+                        }}
+                        autoFocus
+                      />
+                      <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+                        <button
+                          onClick={handleEditCancel}
+                          style={{
+                            background: "rgba(255,255,255,0.1)",
+                            border: "1px solid rgba(255,255,255,0.2)",
+                            color: "white",
+                            padding: "6px 14px",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontSize: "13px",
+                          }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleEditConfirm}
+                          style={{
+                            background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+                            border: "none",
+                            color: "white",
+                            padding: "6px 14px",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontSize: "13px",
+                          }}
+                        >
+                          Send
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="message-bubble user">
+                        {msg.content}
+                      </div>
+                      {hoveredMessageId === msg._id && (
+                        <div style={{ display: "flex", gap: "6px" }}>
+                          <button
+                            onClick={() => handleEditStart(msg._id, msg.content)}
+                            style={{
+                              background: "rgba(255,255,255,0.1)",
+                              border: "1px solid rgba(255,255,255,0.2)",
+                              color: "rgba(255,255,255,0.7)",
+                              padding: "4px 10px",
+                              borderRadius: "6px",
+                              cursor: "pointer",
+                              fontSize: "12px",
+                            }}
+                          >
+                            ✏️ Edit
+                          </button>
+                          <button
+                            onClick={() => handleRetry(msg._id, msg.content)}
+                            style={{
+                              background: "rgba(255,255,255,0.1)",
+                              border: "1px solid rgba(255,255,255,0.2)",
+                              color: "rgba(255,255,255,0.7)",
+                              padding: "4px 10px",
+                              borderRadius: "6px",
+                              cursor: "pointer",
+                              fontSize: "12px",
+                            }}
+                          >
+                            🔄 Retry
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              ) : (
+                <div className="message-bubble assistant">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           ))}
 

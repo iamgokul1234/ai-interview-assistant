@@ -5,6 +5,7 @@ import {
   getMessagesHandler,
   addMessage,
   deleteConversationHandler,
+  deleteMessagesFromHandler,
 } from '../controllers/conversationController';
 import { protect } from '../middleware/authMiddleware';
 
@@ -17,5 +18,6 @@ router.get('/', getAllConversations);
 router.get('/:id/messages', getMessagesHandler);
 router.post('/:id/messages', addMessage);
 router.delete('/:id', deleteConversationHandler);
+router.post('/:id/messages/delete-from', deleteMessagesFromHandler);
 
 export default router;

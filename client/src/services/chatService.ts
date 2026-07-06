@@ -56,3 +56,16 @@ export const deleteConversationAPI = async (
   );
   return response.data;
 };
+
+export const deleteMessagesFromAPI = async (
+  token: string,
+  conversationId: string,
+  messageId: string
+) => {
+  const response = await axios.post(
+    `${API_URL}/conversations/${conversationId}/messages/delete-from`,
+    { messageId },
+    getHeaders(token)
+  );
+  return response.data;
+};
