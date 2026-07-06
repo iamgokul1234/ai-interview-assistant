@@ -97,7 +97,7 @@ function ChatPage() {
       if (!conversationId) {
         const newConv = await createConversationAPI(
           token as string,
-          "New Conversation"
+          "New Conversation",
         );
         dispatch(addConversation(newConv));
         dispatch(setCurrentConversation(newConv));
@@ -108,7 +108,7 @@ function ChatPage() {
 
       const data = await sendMessageAPI(
         token as string,
-        conversationId,
+        conversationId as string,
         content,
       );
       dispatch(addMessage(data.userMessage));
