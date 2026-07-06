@@ -87,14 +87,28 @@ function ChatPage() {
   };
 
   const handleSend = async () => {
-    if (!input.trim() || !currentConversation || sending) return;
+    if (!input.trim() || sending) return;
     setSending(true);
     const content = input.trim();
     setInput("");
     try {
+      let conversationId = currentConversation?._id;
+
+      if (!conversationId) {
+        const newConv = await createConversationAPI(
+          token as string,
+          "New Conversation"
+        );
+        dispatch(addConversation(newConv));
+        dispatch(setCurrentConversation(newConv));
+        dispatch(setMessages([]));
+        conversationId = newConv._id;
+        navigate(`/chat/${newConv._id}`);
+      }
+
       const data = await sendMessageAPI(
         token as string,
-        currentConversation._id,
+        conversationId,
         content,
       );
       dispatch(addMessage(data.userMessage));
@@ -199,7 +213,7 @@ function ChatPage() {
             <div className="welcome-screen">
               <h2 className="welcome-title">Welcome, {user?.name}!</h2>
               <p className="welcome-subtitle">
-                Start a new chat to begin your interview preparation.
+                Ask anything to start your interview preparation.
               </p>
             </div>
           )}
@@ -235,12 +249,12 @@ function ChatPage() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask an interview question..."
-              disabled={!currentConversation || sending}
+              disabled={sending}
             />
             <button
               className="btn-send"
               onClick={handleSend}
-              disabled={!currentConversation || sending || !input.trim()}
+              disabled={sending || !input.trim()}
             >
               ↑
             </button>
