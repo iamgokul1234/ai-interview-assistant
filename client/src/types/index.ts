@@ -26,6 +26,8 @@ export interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  initializing: boolean;
+
 }
 
 export interface ChatState {

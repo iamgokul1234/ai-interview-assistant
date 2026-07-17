@@ -1,14 +1,13 @@
-import { Response, Router } from "express";
-import { login, register } from "../controllers/authController";
-import { AuthRequest, protect } from "../middleware/authMiddleware";
+import { Router } from 'express';
+import { register, login, getMe } from '../controllers/authController';
+import { protect } from '../middleware/authMiddleware';
+import type { Response } from 'express';
+import type { AuthRequest } from '../middleware/authMiddleware';
 
 const router = Router();
 
-router.post("/register", register);
-router.post("/login", login);
-
-router.get("/me", protect, (req: AuthRequest, res: Response) => {
-  res.json({ message: "Protected route works", userId: req.userId });
-});
+router.post('/register', register);
+router.post('/login', login);
+router.get('/me', protect, getMe);
 
 export default router;
