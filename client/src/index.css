@@ -897,3 +897,112 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Analytics Page
+═══════════════════════════════════════════════════════════ */
+
+.analytics-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Chart wrapper — gives recharts a defined height context */
+.chart-container {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* Empty message inside a chart card */
+.chart-empty-msg {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 40px 0;
+  text-align: center;
+}
+
+/* Glass tooltip rendered by recharts */
+.chart-tooltip {
+  background: rgba(15, 12, 41, 0.95);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text-primary);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.chart-tooltip-label {
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.chart-tooltip-value {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* Score Trend summary strip */
+.trend-summary {
+  display: flex;
+  gap: 0;
+  margin-top: 20px;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 16px;
+}
+
+.trend-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0 12px;
+  border-right: 1px solid var(--glass-border);
+}
+
+.trend-stat:last-child {
+  border-right: none;
+}
+
+.trend-stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  font-weight: 500;
+}
+
+.trend-stat-value {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+/* Recharts label text color override */
+.recharts-label {
+  fill: rgba(255, 255, 255, 0.6) !important;
+  font-size: 11px !important;
+}
+
+/* Analytics responsive */
+@media (max-width: 768px) {
+  .trend-summary {
+    flex-wrap: wrap;
+  }
+
+  .trend-stat {
+    flex: 1 1 50%;
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border);
+    padding: 12px;
+  }
+
+  .trend-stat:last-child,
+  .trend-stat:nth-child(2) {
+    border-bottom: none;
+  }
+}

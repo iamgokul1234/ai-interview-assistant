@@ -273,6 +273,19 @@ function ChatPage() {
           📊 Dashboard
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/analytics")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(16,185,129,0.15)",
+            borderColor: "rgba(16,185,129,0.3)",
+            color: "#34d399",
+          }}
+        >
+          📈 Analytics
+        </button>
+
         <div className="conversations-list">
           {conversations.map((conv) => (
             <div

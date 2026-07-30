@@ -116,6 +116,18 @@ function DashboardPage() {
           📊 Dashboard
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate('/analytics')}
+          style={{
+            background: 'rgba(16,185,129,0.15)',
+            borderColor: 'rgba(16,185,129,0.3)',
+            color: '#34d399',
+          }}
+        >
+          📈 Analytics
+        </button>
+
         <div style={{ flex: 1 }} />
 
         <div className="sidebar-footer">

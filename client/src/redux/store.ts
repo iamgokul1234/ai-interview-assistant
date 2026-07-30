@@ -3,6 +3,7 @@ import authReducer from './slices/authSlice';
 import chatReducer from './slices/chatSlice';
 import interviewReducer from './slices/interviewSlice';
 import dashboardReducer from './slices/dashboardSlice';
+import analyticsReducer from './slices/analyticsSlice';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     chat: chatReducer,
     interview: interviewReducer,
     dashboard: dashboardReducer,
+    analytics: analyticsReducer,
   },
 });
 

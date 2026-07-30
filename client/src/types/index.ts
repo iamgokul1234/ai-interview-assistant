@@ -131,3 +131,43 @@ export interface DashboardState {
   loading: boolean;
   error: string | null;
 }
+
+// ─── Analytics Types ──────────────────────────────────────────────────────────
+
+export interface WeeklyScorePoint {
+  date: string;
+  averageScore: number | null;
+  count: number;
+}
+
+export interface TopicPerformancePoint {
+  topic: InterviewTopic;
+  averageScore: number;
+  count: number;
+}
+
+export interface DifficultyDistributionPoint {
+  difficulty: InterviewDifficulty;
+  count: number;
+  percentage: number;
+}
+
+export interface ScoreTrendPoint {
+  index: number;
+  score: number;
+  topic: InterviewTopic;
+  date: string;
+}
+
+export interface AnalyticsData {
+  weeklyScores: WeeklyScorePoint[];
+  topicPerformance: TopicPerformancePoint[];
+  difficultyDistribution: DifficultyDistributionPoint[];
+  scoreTrend: ScoreTrendPoint[];
+}
+
+export interface AnalyticsState {
+  data: AnalyticsData | null;
+  loading: boolean;
+  error: string | null;
+}
