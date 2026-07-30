@@ -185,6 +185,18 @@ function AnalyticsPage() {
           🏢 Company Interview
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate('/resume')}
+          style={{
+            background: 'rgba(236,72,153,0.15)',
+            borderColor: 'rgba(236,72,153,0.3)',
+            color: '#f472b6',
+          }}
+        >
+          📄 Resume Review
+        </button>
+
         <div style={{ flex: 1 }} />
 
         <div className="sidebar-footer">

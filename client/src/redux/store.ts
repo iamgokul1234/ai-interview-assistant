@@ -4,6 +4,7 @@ import chatReducer from './slices/chatSlice';
 import interviewReducer from './slices/interviewSlice';
 import dashboardReducer from './slices/dashboardSlice';
 import analyticsReducer from './slices/analyticsSlice';
+import resumeReducer from './slices/resumeSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     interview: interviewReducer,
     dashboard: dashboardReducer,
     analytics: analyticsReducer,
+    resume: resumeReducer,
   },
 });
 

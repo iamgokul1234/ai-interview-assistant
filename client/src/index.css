@@ -1006,3 +1006,115 @@ body {
     border-bottom: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Resume Review Page
+═══════════════════════════════════════════════════════════ */
+
+.resume-dropzone {
+  border: 2px dashed rgba(236, 72, 153, 0.4);
+  background: rgba(236, 72, 153, 0.05);
+  border-radius: var(--border-radius);
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.resume-dropzone:hover {
+  background: rgba(236, 72, 153, 0.1);
+  border-color: #ec4899;
+}
+
+.resume-report-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.resume-score-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.resume-score-dial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: rgba(15, 12, 41, 0.8);
+  border: 3px solid var(--glass-border);
+  flex-shrink: 0;
+}
+
+.resume-score-number {
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.resume-score-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+.resume-score-meta {
+  flex: 1;
+}
+
+.resume-feedback-text {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.resume-skill-tag {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.resume-summary-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-sm);
+  padding: 16px;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.resume-project-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-sm);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: var(--transition);
+}
+
+.resume-project-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(139, 92, 246, 0.4);
+}
+
+@media (max-width: 768px) {
+  .resume-score-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}

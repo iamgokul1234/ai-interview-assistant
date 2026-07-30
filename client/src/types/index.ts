@@ -187,3 +187,27 @@ export interface AnalyticsState {
   loading: boolean;
   error: string | null;
 }
+
+// ─── Resume Review Types ──────────────────────────────────────────────────────
+
+export interface ResumeReview {
+  _id: string;
+  userId: string;
+  resumeText: string;
+  fileName?: string;
+  atsScore: number;
+  grammarFeedback: string;
+  missingSkills: string[];
+  improvedSummary: string;
+  projectSuggestions: string[];
+  overallFeedback: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResumeState {
+  reviews: ResumeReview[];
+  currentReview: ResumeReview | null;
+  loading: boolean;
+  error: string | null;
+}

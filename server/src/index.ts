@@ -9,6 +9,7 @@ import conversationRoutes from './routes/conversationRoutes';
 import interviewRoutes from './routes/interviewRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
+import resumeRoutes from './routes/resumeRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +24,7 @@ app.use('/api/conversations', conversationRoutes);
 app.use('/api/interviews', interviewRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/resume', resumeRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'AI Interview Assistant API is running' });
