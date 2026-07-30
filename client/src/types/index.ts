@@ -37,3 +37,57 @@ export interface ChatState {
   loading: boolean;
   error: string | null;
 }
+
+export type InterviewTopic =
+  | 'React'
+  | 'JavaScript'
+  | 'TypeScript'
+  | 'Node.js'
+  | 'Express'
+  | 'MongoDB'
+  | 'MERN'
+  | 'DSA'
+  | 'System Design'
+  | 'SQL'
+  | 'HR Interview';
+
+export type InterviewDifficulty = 'Easy' | 'Medium' | 'Hard';
+export type InterviewDuration = 15 | 30 | 60;
+export type InterviewStatus = 'in-progress' | 'completed';
+
+export interface InterviewQuestion {
+  _id: string;
+  interviewId: string;
+  questionNumber: number;
+  question: string;
+  answer?: string;
+  evaluation?: string;
+  score?: number;
+  createdAt: string;
+}
+
+export interface Interview {
+  _id: string;
+  userId: string;
+  topic: InterviewTopic;
+  difficulty: InterviewDifficulty;
+  duration: InterviewDuration;
+  status: InterviewStatus;
+  startedAt: string;
+  completedAt?: string;
+  score?: number;
+  feedback?: string;
+  strongAreas?: string[];
+  weakAreas?: string[];
+  suggestions?: string[];
+  createdAt: string;
+}
+
+export interface InterviewState {
+  interviews: Interview[];
+  currentInterview: Interview | null;
+  currentQuestion: InterviewQuestion | null;
+  questions: InterviewQuestion[];
+  loading: boolean;
+  error: string | null;
+}

@@ -1,31 +1,37 @@
-import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from './redux/store';
-import { loginSuccess, logout, setInitializing } from './redux/slices/authSlice';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import ChatPage from './pages/ChatPage';
-import axios from 'axios';
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "./redux/store";
+import {
+  loginSuccess,
+  logout,
+  setInitializing,
+} from "./redux/slices/authSlice";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import ChatPage from "./pages/ChatPage";
+import InterviewPage from "./pages/InterviewPage";
+import InterviewReportPage from "./pages/InterviewReportPage";
+import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, initializing } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
   if (initializing) {
     return (
       <div
         style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
-          color: 'white',
-          fontSize: '18px',
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)",
+          color: "white",
+          fontSize: "18px",
         }}
       >
         Loading...
@@ -76,6 +82,22 @@ function App() {
           element={
             <ProtectedRoute>
               <ChatPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/interview"
+          element={
+            <ProtectedRoute>
+              <InterviewPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/interview/:id/report"
+          element={
+            <ProtectedRoute>
+              <InterviewReportPage />
             </ProtectedRoute>
           }
         />

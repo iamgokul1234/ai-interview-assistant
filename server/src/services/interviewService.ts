@@ -1,11 +1,18 @@
-import Interview, { IInterview, InterviewTopic, InterviewDifficulty, InterviewDuration } from '../models/Interview';
-import InterviewQuestion, { IInterviewQuestion } from '../models/InterviewQuestion';
-import { getAIResponse } from './aiService';
+import Interview, {
+  IInterview,
+  InterviewTopic,
+  InterviewDifficulty,
+  InterviewDuration,
+} from "../models/Interview";
+import InterviewQuestion, {
+  IInterviewQuestion,
+} from "../models/InterviewQuestion";
+import { getAIResponse } from "./aiService";
 
 const buildStartPrompt = (
   topic: InterviewTopic,
   difficulty: InterviewDifficulty,
-  duration: InterviewDuration
+  duration: InterviewDuration,
 ): string => {
   return `You are a strict but fair technical interviewer conducting a ${difficulty} level ${topic} interview that will last ${duration} minutes.
 
@@ -29,35 +36,42 @@ const buildEvaluationPrompt = (
   difficulty: InterviewDifficulty,
   question: string,
   answer: string,
-  questionNumber: number
+  questionNumber: number,
+  previousQuestions: string[],
 ): string => {
+  const asked = previousQuestions.map((q, i) => `${i + 1}. ${q}`).join("\n");
+
   return `You are evaluating a candidate's answer in a ${difficulty} level ${topic} interview.
 
 Question ${questionNumber}: ${question}
 
 Candidate's Answer: ${answer}
 
+Questions already asked (DO NOT repeat these):
+${asked}
+
 Evaluate the answer and respond in this EXACT JSON format with no extra text:
 {
   "score": <number 0-10>,
   "evaluation": "<brief evaluation of the answer in 2-3 sentences>",
-  "nextQuestion": "<the next ${difficulty} level ${topic} interview question>"
+  "nextQuestion": "<a NEW ${difficulty} level ${topic} interview question that has NOT been asked before>"
 }
 
-Be strict but fair. Score 0-3 for wrong/incomplete, 4-6 for partial, 7-9 for good, 10 for perfect.`;
+Be strict but fair. Score 0-3 for wrong/incomplete, 4-6 for partial, 7-9 for good, 10 for perfect.
+The nextQuestion MUST be completely different from all questions listed above.`;
 };
 
 const buildFinalReportPrompt = (
   topic: InterviewTopic,
   difficulty: InterviewDifficulty,
-  questions: IInterviewQuestion[]
+  questions: IInterviewQuestion[],
 ): string => {
   const qa = questions
     .map(
       (q) =>
-        `Q${q.questionNumber}: ${q.question}\nAnswer: ${q.answer || 'No answer'}\nScore: ${q.score}/10`
+        `Q${q.questionNumber}: ${q.question}\nAnswer: ${q.answer || "No answer"}\nScore: ${q.score}/10`,
     )
-    .join('\n\n');
+    .join("\n\n");
 
   return `You are generating a final interview report for a ${difficulty} level ${topic} interview.
 
@@ -78,14 +92,14 @@ export const startInterview = async (
   userId: string,
   topic: InterviewTopic,
   difficulty: InterviewDifficulty,
-  duration: InterviewDuration
+  duration: InterviewDuration,
 ): Promise<{ interview: IInterview; firstQuestion: IInterviewQuestion }> => {
   const interview = await Interview.create({
     userId,
     topic,
     difficulty,
     duration,
-    status: 'in-progress',
+    status: "in-progress",
     startedAt: new Date(),
   });
 
@@ -104,37 +118,43 @@ export const startInterview = async (
 export const submitAnswer = async (
   interviewId: string,
   userId: string,
-  answer: string
+  answer: string,
 ): Promise<{
   evaluation: string;
   score: number;
   nextQuestion: IInterviewQuestion | null;
 }> => {
   const interview = await Interview.findOne({ _id: interviewId, userId });
-  if (!interview) throw new Error('Interview not found');
-  if (interview.status === 'completed') throw new Error('Interview already completed');
+  if (!interview) throw new Error("Interview not found");
+  if (interview.status === "completed")
+    throw new Error("Interview already completed");
 
-  const questions = await InterviewQuestion.find({ interviewId }).sort({ questionNumber: 1 });
+  const questions = await InterviewQuestion.find({ interviewId }).sort({
+    questionNumber: 1,
+  });
   const currentQuestion = questions[questions.length - 1];
 
-  if (!currentQuestion) throw new Error('No question found');
+  if (!currentQuestion) throw new Error("No question found");
+
+  const previousQuestions = questions.map((q) => q.question);
 
   const prompt = buildEvaluationPrompt(
     interview.topic,
     interview.difficulty,
     currentQuestion.question,
     answer,
-    currentQuestion.questionNumber
+    currentQuestion.questionNumber,
+    previousQuestions,
   );
 
   const aiResponse = await getAIResponse(prompt, []);
 
   let parsed: { score: number; evaluation: string; nextQuestion: string };
   try {
-    const clean = aiResponse.replace(/```json|```/g, '').trim();
+    const clean = aiResponse.replace(/```json|```/g, "").trim();
     parsed = JSON.parse(clean);
   } catch {
-    throw new Error('AI response parsing failed');
+    throw new Error("AI response parsing failed");
   }
 
   await InterviewQuestion.findByIdAndUpdate(currentQuestion._id, {
@@ -158,10 +178,10 @@ export const submitAnswer = async (
 
 export const completeInterview = async (
   interviewId: string,
-  userId: string
+  userId: string,
 ): Promise<IInterview> => {
   const interview = await Interview.findOne({ _id: interviewId, userId });
-  if (!interview) throw new Error('Interview not found');
+  if (!interview) throw new Error("Interview not found");
 
   const questions = await InterviewQuestion.find({
     interviewId,
@@ -171,7 +191,7 @@ export const completeInterview = async (
   const prompt = buildFinalReportPrompt(
     interview.topic,
     interview.difficulty,
-    questions
+    questions,
   );
 
   const aiResponse = await getAIResponse(prompt, []);
@@ -185,16 +205,16 @@ export const completeInterview = async (
   };
 
   try {
-    const clean = aiResponse.replace(/```json|```/g, '').trim();
+    const clean = aiResponse.replace(/```json|```/g, "").trim();
     parsed = JSON.parse(clean);
   } catch {
-    throw new Error('AI report parsing failed');
+    throw new Error("AI report parsing failed");
   }
 
   const updatedInterview = await Interview.findByIdAndUpdate(
     interviewId,
     {
-      status: 'completed',
+      status: "completed",
       completedAt: new Date(),
       score: parsed.score,
       feedback: parsed.feedback,
@@ -202,7 +222,7 @@ export const completeInterview = async (
       weakAreas: parsed.weakAreas,
       suggestions: parsed.suggestions,
     },
-    { new: true }
+    { new: true },
   );
 
   return updatedInterview as IInterview;
@@ -214,10 +234,10 @@ export const getInterviews = async (userId: string): Promise<IInterview[]> => {
 
 export const getInterview = async (
   interviewId: string,
-  userId: string
+  userId: string,
 ): Promise<{ interview: IInterview; questions: IInterviewQuestion[] }> => {
   const interview = await Interview.findOne({ _id: interviewId, userId });
-  if (!interview) throw new Error('Interview not found');
+  if (!interview) throw new Error("Interview not found");
 
   const questions = await InterviewQuestion.find({ interviewId }).sort({
     questionNumber: 1,

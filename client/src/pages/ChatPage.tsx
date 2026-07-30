@@ -27,7 +27,7 @@ function ChatPage() {
   const navigate = useNavigate();
   const { token, user } = useSelector((state: RootState) => state.auth);
   const { conversations, currentConversation, messages } = useSelector(
-    (state: RootState) => state.chat
+    (state: RootState) => state.chat,
   );
 
   const [input, setInput] = useState("");
@@ -78,7 +78,7 @@ function ChatPage() {
     try {
       const data = await createConversationAPI(
         token as string,
-        "New Conversation"
+        "New Conversation",
       );
       dispatch(addConversation(data));
       dispatch(setCurrentConversation(data));
@@ -101,7 +101,7 @@ function ChatPage() {
       if (!conversationId) {
         const newConv = await createConversationAPI(
           token as string,
-          "New Conversation"
+          "New Conversation",
         );
         dispatch(addConversation(newConv));
         dispatch(setCurrentConversation(newConv));
@@ -113,7 +113,7 @@ function ChatPage() {
       const data = await sendMessageAPI(
         token as string,
         conversationId as string,
-        content
+        content,
       );
       dispatch(addMessage(data.userMessage));
       dispatch(addMessage(data.aiMessage));
@@ -132,18 +132,18 @@ function ChatPage() {
       await deleteMessagesFromAPI(
         token as string,
         currentConversation._id,
-        messageId
+        messageId,
       );
       const freshMessages = await getMessagesAPI(
         token as string,
-        currentConversation._id
+        currentConversation._id,
       );
       dispatch(setMessages(freshMessages));
 
       const data = await sendMessageAPI(
         token as string,
         currentConversation._id,
-        content
+        content,
       );
       dispatch(addMessage(data.userMessage));
       dispatch(addMessage(data.aiMessage));
@@ -161,7 +161,13 @@ function ChatPage() {
   };
 
   const handleEditConfirm = async () => {
-    if (!editingMessageId || !editingContent.trim() || !currentConversation || sending) return;
+    if (
+      !editingMessageId ||
+      !editingContent.trim() ||
+      !currentConversation ||
+      sending
+    )
+      return;
     setSending(true);
     const content = editingContent.trim();
     setEditingMessageId(null);
@@ -170,18 +176,18 @@ function ChatPage() {
       await deleteMessagesFromAPI(
         token as string,
         currentConversation._id,
-        editingMessageId
+        editingMessageId,
       );
       const freshMessages = await getMessagesAPI(
         token as string,
-        currentConversation._id
+        currentConversation._id,
       );
       dispatch(setMessages(freshMessages));
 
       const data = await sendMessageAPI(
         token as string,
         currentConversation._id,
-        content
+        content,
       );
       dispatch(addMessage(data.userMessage));
       dispatch(addMessage(data.aiMessage));
@@ -239,6 +245,19 @@ function ChatPage() {
 
         <button className="btn-new-chat" onClick={handleNewChat}>
           + New Chat
+        </button>
+
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/interview")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(139,92,246,0.15)",
+            borderColor: "rgba(139,92,246,0.3)",
+            color: "#a78bfa",
+          }}
+        >
+          🎯 Mock Interview
         </button>
 
         <div className="conversations-list">
@@ -303,7 +322,15 @@ function ChatPage() {
               onMouseLeave={() => setHoveredMessageId(null)}
             >
               {msg.role === "user" ? (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "6px", maxWidth: "70%" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: "6px",
+                    maxWidth: "70%",
+                  }}
+                >
                   {editingMessageId === msg._id ? (
                     <div style={{ width: "100%" }}>
                       <textarea
@@ -322,7 +349,13 @@ function ChatPage() {
                         }}
                         autoFocus
                       />
-                      <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          justifyContent: "flex-end",
+                        }}
+                      >
                         <button
                           onClick={handleEditCancel}
                           style={{
@@ -340,7 +373,8 @@ function ChatPage() {
                         <button
                           onClick={handleEditConfirm}
                           style={{
-                            background: "linear-gradient(135deg, #8b5cf6, #3b82f6)",
+                            background:
+                              "linear-gradient(135deg, #8b5cf6, #3b82f6)",
                             border: "none",
                             color: "white",
                             padding: "6px 14px",
@@ -355,13 +389,13 @@ function ChatPage() {
                     </div>
                   ) : (
                     <>
-                      <div className="message-bubble user">
-                        {msg.content}
-                      </div>
+                      <div className="message-bubble user">{msg.content}</div>
                       {hoveredMessageId === msg._id && (
                         <div style={{ display: "flex", gap: "6px" }}>
                           <button
-                            onClick={() => handleEditStart(msg._id, msg.content)}
+                            onClick={() =>
+                              handleEditStart(msg._id, msg.content)
+                            }
                             style={{
                               background: "rgba(255,255,255,0.1)",
                               border: "1px solid rgba(255,255,255,0.2)",
