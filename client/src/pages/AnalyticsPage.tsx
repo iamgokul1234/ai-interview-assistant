@@ -331,8 +331,8 @@ function AnalyticsPage() {
                           outerRadius={80}
                           innerRadius={40}
                           paddingAngle={4}
-                          label={({ difficulty, percentage }) =>
-                            `${difficulty} ${percentage}%`
+                          label={({ name, percent }: { name: string; percent: number }) =>
+                            `${name} ${Math.round(percent * 100)}%`
                           }
                           labelLine={{ stroke: 'rgba(255,255,255,0.2)' }}
                         >
