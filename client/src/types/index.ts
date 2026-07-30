@@ -55,6 +55,21 @@ export type InterviewDifficulty = 'Easy' | 'Medium' | 'Hard';
 export type InterviewDuration = 15 | 30 | 60;
 export type InterviewStatus = 'in-progress' | 'completed';
 
+export type InterviewCompany =
+  | 'Amazon'
+  | 'Google'
+  | 'Microsoft'
+  | 'Meta'
+  | 'Netflix'
+  | 'Zoho'
+  | 'Freshworks'
+  | 'TCS'
+  | 'Infosys'
+  | 'Accenture'
+  | 'Cognizant'
+  | 'Wipro'
+  | 'Capgemini';
+
 export interface InterviewQuestion {
   _id: string;
   interviewId: string;
@@ -72,6 +87,7 @@ export interface Interview {
   topic: InterviewTopic;
   difficulty: InterviewDifficulty;
   duration: InterviewDuration;
+  company?: InterviewCompany;
   status: InterviewStatus;
   startedAt: string;
   completedAt?: string;

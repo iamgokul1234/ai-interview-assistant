@@ -18,12 +18,28 @@ import type {
   InterviewTopic,
   InterviewDifficulty,
   InterviewDuration,
+  InterviewCompany,
 } from '../types';
 
 const TOPICS: InterviewTopic[] = [
   'React', 'JavaScript', 'TypeScript', 'Node.js',
   'Express', 'MongoDB', 'MERN', 'DSA',
   'System Design', 'SQL', 'HR Interview',
+];
+
+const COMPANY_CATEGORIES: { name: string; companies: InterviewCompany[] }[] = [
+  {
+    name: 'FAANG / Big Tech',
+    companies: ['Amazon', 'Google', 'Microsoft', 'Meta', 'Netflix'],
+  },
+  {
+    name: 'Indian Product',
+    companies: ['Zoho', 'Freshworks'],
+  },
+  {
+    name: 'Indian Service',
+    companies: ['TCS', 'Infosys', 'Accenture', 'Cognizant', 'Wipro', 'Capgemini'],
+  },
 ];
 
 const DIFFICULTIES: InterviewDifficulty[] = ['Easy', 'Medium', 'Hard'];
@@ -44,6 +60,7 @@ function InterviewPage() {
   );
 
   const [topic, setTopic] = useState<InterviewTopic>('JavaScript');
+  const [company, setCompany] = useState<InterviewCompany | undefined>(undefined);
   const [difficulty, setDifficulty] = useState<InterviewDifficulty>('Easy');
   const [duration, setDuration] = useState<InterviewDuration>(15);
   const [answer, setAnswer] = useState('');
@@ -91,7 +108,8 @@ function InterviewPage() {
         token as string,
         topic,
         difficulty,
-        duration
+        duration,
+        company
       );
       dispatch(setCurrentInterview(data.interview));
       dispatch(setCurrentQuestion(data.firstQuestion));
@@ -161,12 +179,14 @@ function InterviewPage() {
       }}>
         <div style={{
           width: '100%',
-          maxWidth: '600px',
+          maxWidth: '680px',
           background: 'rgba(255,255,255,0.05)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(255,255,255,0.15)',
           borderRadius: '16px',
           padding: '40px',
+          maxHeight: '90vh',
+          overflowY: 'auto',
         }}>
           <button
             onClick={() => navigate('/chat')}
@@ -222,6 +242,60 @@ function InterviewPage() {
                 >
                   {t}
                 </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Target Company (Optional) */}
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <label style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px' }}>
+                Target Company <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>(Optional — custom AI interview style)</span>
+              </label>
+              {company && (
+                <button
+                  onClick={() => setCompany(undefined)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#f87171',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                  }}
+                >
+                  Clear Selection
+                </button>
+              )}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {COMPANY_CATEGORIES.map((cat) => (
+                <div key={cat.name}>
+                  <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>
+                    {cat.name}
+                  </span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {cat.companies.map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => setCompany(company === c ? undefined : c)}
+                        style={{
+                          padding: '6px 14px',
+                          borderRadius: '8px',
+                          border: '1px solid',
+                          borderColor: company === c ? '#3b82f6' : 'rgba(255,255,255,0.12)',
+                          background: company === c ? 'rgba(59,130,246,0.25)' : 'rgba(255,255,255,0.04)',
+                          color: company === c ? '#60a5fa' : 'rgba(255,255,255,0.7)',
+                          cursor: 'pointer',
+                          fontSize: '13px',
+                          fontWeight: company === c ? '600' : '400',
+                          transition: 'all 0.2s',
+                        }}
+                      >
+                        🏢 {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -298,7 +372,7 @@ function InterviewPage() {
               opacity: loading ? 0.7 : 1,
             }}
           >
-            {loading ? 'Starting...' : 'Start Interview'}
+            {loading ? 'Starting...' : company ? `Start ${company} Interview` : 'Start Interview'}
           </button>
         </div>
       </div>
@@ -322,7 +396,7 @@ function InterviewPage() {
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           <span style={{
             background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)',
             WebkitBackgroundClip: 'text',
@@ -333,8 +407,20 @@ function InterviewPage() {
           }}>
             {topic} Interview
           </span>
+          {company && (
+            <span style={{
+              padding: '2px 10px',
+              borderRadius: '4px',
+              fontSize: '12px',
+              color: '#60a5fa',
+              border: '1px solid rgba(59,130,246,0.4)',
+              background: 'rgba(59,130,246,0.15)',
+              fontWeight: '600',
+            }}>
+              🏢 {company}
+            </span>
+          )}
           <span style={{
-            marginLeft: '12px',
             padding: '2px 10px',
             borderRadius: '4px',
             fontSize: '12px',

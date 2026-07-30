@@ -9,17 +9,57 @@ import InterviewQuestion, {
 } from "../models/InterviewQuestion";
 import { getAIResponse } from "./aiService";
 
+// ── Company-specific interviewer personas ─────────────────────────────────────
+const COMPANY_PROMPTS: Record<string, string> = {
+  // FAANG
+  Amazon:
+    'You are a strict Amazon interviewer. Focus heavily on Leadership Principles (customer obsession, ownership, bias for action, dive deep). Mix behavioral questions ("Tell me about a time...") with technical questions. Every answer should be evaluated against Amazon LP.',
+  Google:
+    'You are a Google interviewer. Focus on algorithms, data structures, time/space complexity, and system design. Ask candidates to analyse Big-O. Expect clean, optimal solutions. Prefer breadth-first problem solving.',
+  Microsoft:
+    'You are a Microsoft interviewer. Focus on object-oriented design, problem solving, and behavioral questions. Ask about debugging approaches, code quality, and growth mindset. Be collaborative and encouraging.',
+  Meta:
+    'You are a Meta (Facebook) interviewer. Focus on scalability, distributed systems, product sense, and coding speed. Ask how features work at 3-billion-user scale. Expect candidates to think about trade-offs.',
+  Netflix:
+    'You are a Netflix interviewer. Focus on culture of freedom and responsibility, senior-level judgment, and technical excellence. Expect candidates to demonstrate they can work autonomously and make high-impact decisions.',
+  // Indian Product Companies
+  Zoho:
+    'You are a Zoho interviewer. Focus on practical coding ability, data structures, and product understanding. Ask hands-on programming problems. Evaluate problem-solving speed and code quality.',
+  Freshworks:
+    'You are a Freshworks interviewer. Focus on full-stack development, SaaS product thinking, and practical coding. Ask about REST APIs, database design, and frontend/backend integration.',
+  // Indian Service Companies
+  TCS:
+    'You are a TCS interviewer. Focus on core computer science fundamentals, basic data structures, OOP concepts, and HR questions. Ask straightforward technical questions appropriate for campus or lateral hiring.',
+  Infosys:
+    'You are an Infosys interviewer. Focus on basic programming logic, database concepts (SQL), networking basics, and behavioral HR questions. Keep the technical level moderate and conversational.',
+  Accenture:
+    'You are an Accenture interviewer. Mix technical fundamentals (OOP, databases, basic algorithms) with HR and situational questions. Evaluate communication skills and problem-solving approach.',
+  Cognizant:
+    'You are a Cognizant (CTS) interviewer. Focus on core CS subjects, SDLC concepts, basic coding, and HR questions. Be friendly and assess the candidate\'s ability to learn and adapt.',
+  Wipro:
+    'You are a Wipro interviewer. Focus on aptitude-style logical thinking, basic programming concepts, SQL, and behavioral questions. Assess how well candidates communicate their thought process.',
+  Capgemini:
+    'You are a Capgemini interviewer. Ask about basic programming, pseudo-code logic, database fundamentals, and team-fit questions. Evaluate clarity of thought and communication skills.',
+};
+
+
 const buildStartPrompt = (
   topic: InterviewTopic,
   difficulty: InterviewDifficulty,
   duration: InterviewDuration,
+  company?: string,
 ): string => {
-  return `You are a strict but fair technical interviewer conducting a ${difficulty} level ${topic} interview that will last ${duration} minutes.
+  const companyContext =
+    company && COMPANY_PROMPTS[company]
+      ? `\n\nCompany Context: ${COMPANY_PROMPTS[company]}`
+      : '';
+
+  return `You are a strict but fair technical interviewer conducting a ${difficulty} level ${topic} interview that will last ${duration} minutes.${companyContext}
 
 Your job:
 - Ask ONE clear technical question at a time
 - Wait for the candidate's answer before asking the next question
-- Keep questions appropriate for ${difficulty} difficulty
+- Keep questions appropriate for ${difficulty} difficulty${company ? `\n- Tailor questions to reflect how ${company} interviews are conducted` : ''}
 
 Rules:
 - Ask only ONE question now
@@ -93,17 +133,19 @@ export const startInterview = async (
   topic: InterviewTopic,
   difficulty: InterviewDifficulty,
   duration: InterviewDuration,
+  company?: string,
 ): Promise<{ interview: IInterview; firstQuestion: IInterviewQuestion }> => {
   const interview = await Interview.create({
     userId,
     topic,
     difficulty,
     duration,
+    ...(company ? { company } : {}),
     status: "in-progress",
     startedAt: new Date(),
   });
 
-  const prompt = buildStartPrompt(topic, difficulty, duration);
+  const prompt = buildStartPrompt(topic, difficulty, duration, company);
   const firstQuestionText = await getAIResponse(prompt, []);
 
   const firstQuestion = await InterviewQuestion.create({

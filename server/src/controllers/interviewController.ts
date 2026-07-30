@@ -18,7 +18,7 @@ export const startInterviewHandler = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { topic, difficulty, duration } = req.body;
+    const { topic, difficulty, duration, company } = req.body;
 
     if (!topic || !difficulty || !duration) {
       res.status(400).json({ message: 'Topic, difficulty and duration are required' });
@@ -29,12 +29,14 @@ export const startInterviewHandler = async (
       req.userId as string,
       topic as InterviewTopic,
       difficulty as InterviewDifficulty,
-      duration as InterviewDuration
+      duration as InterviewDuration,
+      typeof company === 'string' && company.trim() ? company.trim() : undefined
     );
 
     res.status(201).json(result);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to start interview';
+    res.status(400).json({ message });
   }
 };
 
@@ -53,8 +55,9 @@ export const submitAnswerHandler = async (
 
     const result = await submitAnswer(id, req.userId as string, answer);
     res.status(200).json(result);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to submit answer';
+    res.status(400).json({ message });
   }
 };
 
@@ -66,8 +69,9 @@ export const completeInterviewHandler = async (
     const id = req.params.id as string;
     const result = await completeInterview(id, req.userId as string);
     res.status(200).json(result);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to complete interview';
+    res.status(400).json({ message });
   }
 };
 
@@ -78,8 +82,9 @@ export const getInterviewsHandler = async (
   try {
     const interviews = await getInterviews(req.userId as string);
     res.status(200).json(interviews);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch interviews';
+    res.status(400).json({ message });
   }
 };
 
@@ -91,7 +96,9 @@ export const getInterviewHandler = async (
     const id = req.params.id as string;
     const result = await getInterview(id, req.userId as string);
     res.status(200).json(result);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch interview';
+    res.status(400).json({ message });
   }
 };
+

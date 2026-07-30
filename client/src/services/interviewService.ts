@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { InterviewTopic, InterviewDifficulty, InterviewDuration } from '../types';
+import type { InterviewTopic, InterviewDifficulty, InterviewDuration, InterviewCompany } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -13,11 +13,12 @@ export const startInterviewAPI = async (
   token: string,
   topic: InterviewTopic,
   difficulty: InterviewDifficulty,
-  duration: InterviewDuration
+  duration: InterviewDuration,
+  company?: InterviewCompany
 ) => {
   const response = await axios.post(
     `${API_URL}/interviews/start`,
-    { topic, difficulty, duration },
+    { topic, difficulty, duration, company },
     getHeaders(token)
   );
   return response.data;

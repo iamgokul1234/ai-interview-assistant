@@ -22,6 +22,7 @@ export interface IInterview extends Document {
   topic: InterviewTopic;
   difficulty: InterviewDifficulty;
   duration: InterviewDuration;
+  company?: string;
   status: InterviewStatus;
   startedAt: Date;
   completedAt?: Date;
@@ -67,6 +68,9 @@ const InterviewSchema: Schema = new Schema(
       type: Number,
       enum: [15, 30, 60],
       required: true,
+    },
+    company: {
+      type: String,
     },
     status: {
       type: String,

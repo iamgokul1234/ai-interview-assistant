@@ -286,6 +286,19 @@ function ChatPage() {
           📈 Analytics
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/interview")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(245,158,11,0.15)",
+            borderColor: "rgba(245,158,11,0.3)",
+            color: "#fbbf24",
+          }}
+        >
+          🏢 Company Interview
+        </button>
+
         <div className="conversations-list">
           {conversations.map((conv) => (
             <div

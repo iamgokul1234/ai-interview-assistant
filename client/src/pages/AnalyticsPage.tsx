@@ -173,6 +173,18 @@ function AnalyticsPage() {
           📈 Analytics
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate('/interview')}
+          style={{
+            background: 'rgba(245,158,11,0.15)',
+            borderColor: 'rgba(245,158,11,0.3)',
+            color: '#fbbf24',
+          }}
+        >
+          🏢 Company Interview
+        </button>
+
         <div style={{ flex: 1 }} />
 
         <div className="sidebar-footer">
