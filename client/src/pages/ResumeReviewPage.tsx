@@ -234,6 +234,18 @@ function ResumeReviewPage() {
           🧭 Career Coach
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate('/coding')}
+          style={{
+            background: 'rgba(20,184,166,0.15)',
+            borderColor: 'rgba(20,184,166,0.3)',
+            color: '#2dd4bf',
+          }}
+        >
+          💻 Coding Challenge
+        </button>
+
         <div style={{ flex: 1 }} />
 
         <div className="sidebar-footer">

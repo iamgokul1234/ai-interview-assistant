@@ -1254,3 +1254,112 @@ body {
   align-items: flex-start;
   gap: 12px;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Coding Challenge Page (LeetCode Style Workspace)
+═══════════════════════════════════════════════════════════ */
+
+.coding-workspace-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.coding-problem-pane {
+  display: flex;
+  flex-direction: column;
+  max-height: 750px;
+  overflow-y: auto;
+}
+
+.coding-problem-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.coding-problem-desc {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.coding-example-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.coding-example-card code {
+  color: #2dd4bf;
+  font-family: monospace;
+}
+
+.coding-constraints-list {
+  padding-left: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coding-editor-pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.coding-monaco-wrapper {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.coding-eval-card {
+  margin-top: 20px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-sm);
+  padding: 16px;
+}
+
+.coding-eval-metrics {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.coding-metric-box {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coding-metric-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.coding-metric-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2dd4bf;
+  margin-top: 2px;
+}
+
+@media (max-width: 992px) {
+  .coding-workspace-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -6,6 +6,7 @@ import dashboardReducer from './slices/dashboardSlice';
 import analyticsReducer from './slices/analyticsSlice';
 import resumeReducer from './slices/resumeSlice';
 import careerReducer from './slices/careerSlice';
+import codingReducer from './slices/codingSlice';
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     analytics: analyticsReducer,
     resume: resumeReducer,
     career: careerReducer,
+    coding: codingReducer,
   },
 });
 

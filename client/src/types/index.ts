@@ -259,3 +259,47 @@ export interface CareerState {
   loading: boolean;
   error: string | null;
 }
+
+// ─── Coding Challenge Types ───────────────────────────────────────────────────
+
+export type CodingLanguage = 'javascript' | 'typescript' | 'python';
+
+export interface CodeExample {
+  input: string;
+  output: string;
+  explanation?: string;
+}
+
+export interface CodeEvaluation {
+  passed: boolean;
+  score: number;
+  timeComplexity: string;
+  spaceComplexity: string;
+  detailedFeedback: string;
+  optimalSolution: string;
+}
+
+export interface CodingChallenge {
+  _id: string;
+  userId: string;
+  topic: string;
+  difficulty: InterviewDifficulty;
+  language: CodingLanguage;
+  title: string;
+  description: string;
+  examples: CodeExample[];
+  constraints: string[];
+  starterCode: string;
+  userCode?: string;
+  status: 'unsolved' | 'submitted';
+  evaluation?: CodeEvaluation;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CodingState {
+  challenges: CodingChallenge[];
+  currentChallenge: CodingChallenge | null;
+  loading: boolean;
+  error: string | null;
+}

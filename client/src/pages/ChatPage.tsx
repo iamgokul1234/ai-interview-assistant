@@ -325,6 +325,19 @@ function ChatPage() {
           🧭 Career Coach
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/coding")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(20,184,166,0.15)",
+            borderColor: "rgba(20,184,166,0.3)",
+            color: "#2dd4bf",
+          }}
+        >
+          💻 Coding Challenge
+        </button>
+
         <div className="conversations-list">
           {conversations.map((conv) => (
             <div
