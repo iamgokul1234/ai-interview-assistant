@@ -396,6 +396,19 @@ function ChatPage() {
           🔖 Bookmarks
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/settings")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(148,163,184,0.15)",
+            borderColor: "rgba(148,163,184,0.3)",
+            color: "#cbd5e1",
+          }}
+        >
+          ⚙️ Settings
+        </button>
+
         <div className="conversations-list">
           {conversations.map((conv) => (
             <div

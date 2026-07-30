@@ -10,6 +10,7 @@ import codingReducer from './slices/codingSlice';
 import dailyReducer from './slices/dailySlice';
 import flashcardReducer from './slices/flashcardSlice';
 import bookmarkReducer from './slices/bookmarkSlice';
+import settingsReducer from './slices/settingsSlice';
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     daily: dailyReducer,
     flashcard: flashcardReducer,
     bookmark: bookmarkReducer,
+    settings: settingsReducer,
   },
 });
 

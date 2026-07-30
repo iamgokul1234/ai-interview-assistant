@@ -212,6 +212,18 @@ function DashboardPage() {
           🔖 Bookmarks
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate('/settings')}
+          style={{
+            background: 'rgba(148,163,184,0.15)',
+            borderColor: 'rgba(148,163,184,0.3)',
+            color: '#cbd5e1',
+          }}
+        >
+          ⚙️ Settings
+        </button>
+
         <div style={{ flex: 1 }} />
 
         <div className="sidebar-footer">

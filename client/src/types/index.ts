@@ -409,3 +409,32 @@ export interface BookmarkState {
   searchQuery: string;
   minRating: number;
 }
+
+// ─── Settings Types ───────────────────────────────────────────────────────────
+
+export interface UserSettings {
+  targetRole?: string;
+  experienceLevel?: string;
+  targetCompanies?: string[];
+  preferredModel?: string;
+  voiceEnabled?: boolean;
+  selectedVoice?: string;
+  speechRate?: number;
+  themePreference?: string;
+}
+
+export interface UserProfile {
+  _id: string;
+  name: string;
+  email: string;
+  settings?: UserSettings;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SettingsState {
+  profile: UserProfile | null;
+  loading: boolean;
+  error: string | null;
+  successMessage: string | null;
+}
