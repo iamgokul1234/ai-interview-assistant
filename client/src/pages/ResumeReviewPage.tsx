@@ -258,6 +258,18 @@ function ResumeReviewPage() {
           🔥 Daily Challenge
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate('/flashcards')}
+          style={{
+            background: 'rgba(168,85,247,0.15)',
+            borderColor: 'rgba(168,85,247,0.3)',
+            color: '#c084fc',
+          }}
+        >
+          🃏 Flash Cards
+        </button>
+
         <div style={{ flex: 1 }} />
 
         <div className="sidebar-footer">

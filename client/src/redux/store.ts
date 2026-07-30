@@ -8,6 +8,7 @@ import resumeReducer from './slices/resumeSlice';
 import careerReducer from './slices/careerSlice';
 import codingReducer from './slices/codingSlice';
 import dailyReducer from './slices/dailySlice';
+import flashcardReducer from './slices/flashcardSlice';
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     career: careerReducer,
     coding: codingReducer,
     daily: dailyReducer,
+    flashcard: flashcardReducer,
   },
 });
 

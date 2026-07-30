@@ -18,6 +18,7 @@ import ResumeReviewPage from "./pages/ResumeReviewPage";
 import CareerCoachPage from "./pages/CareerCoachPage";
 import CodingChallengePage from "./pages/CodingChallengePage";
 import DailyChallengePage from "./pages/DailyChallengePage";
+import FlashcardPage from "./pages/FlashcardPage";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -152,6 +153,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DailyChallengePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/flashcards"
+          element={
+            <ProtectedRoute>
+              <FlashcardPage />
             </ProtectedRoute>
           }
         />

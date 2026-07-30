@@ -339,3 +339,32 @@ export interface DailyState {
   loading: boolean;
   error: string | null;
 }
+
+// ─── Flash Cards Types ────────────────────────────────────────────────────────
+
+export interface Flashcard {
+  cardId: string;
+  front: string;
+  back: string;
+  difficulty: InterviewDifficulty;
+  category: string;
+  mastered: boolean;
+}
+
+export interface FlashcardDeck {
+  _id: string;
+  userId: string;
+  topic: string;
+  title: string;
+  cards: Flashcard[];
+  masteredCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FlashcardState {
+  decks: FlashcardDeck[];
+  currentDeck: FlashcardDeck | null;
+  loading: boolean;
+  error: string | null;
+}
