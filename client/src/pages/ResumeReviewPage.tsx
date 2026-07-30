@@ -15,11 +15,10 @@ import {
   getResumeReviewsAPI,
 } from '../services/resumeService';
 import { logout } from '../redux/slices/authSlice';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
-
-
-// Configure pdfjs worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+// Configure pdfjs worker locally via Vite asset bundler
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 function ResumeReviewPage() {
   const dispatch = useDispatch<AppDispatch>();
