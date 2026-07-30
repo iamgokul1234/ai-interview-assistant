@@ -91,3 +91,43 @@ export interface InterviewState {
   loading: boolean;
   error: string | null;
 }
+
+// ─── Dashboard Types ──────────────────────────────────────────────────────────
+
+export interface TopicBreakdown {
+  topic: InterviewTopic;
+  count: number;
+  averageScore: number;
+}
+
+export interface DifficultyBreakdown {
+  difficulty: InterviewDifficulty;
+  count: number;
+}
+
+export interface RecentInterview {
+  _id: string;
+  topic: InterviewTopic;
+  difficulty: InterviewDifficulty;
+  score: number | null;
+  status: string;
+  completedAt: string | null;
+  createdAt: string;
+}
+
+export interface DashboardStats {
+  totalInterviews: number;
+  completedInterviews: number;
+  averageScore: number | null;
+  bestScore: number | null;
+  currentStreak: number;
+  topicBreakdown: TopicBreakdown[];
+  difficultyBreakdown: DifficultyBreakdown[];
+  recentInterviews: RecentInterview[];
+}
+
+export interface DashboardState {
+  stats: DashboardStats | null;
+  loading: boolean;
+  error: string | null;
+}

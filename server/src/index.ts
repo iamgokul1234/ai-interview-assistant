@@ -7,6 +7,7 @@ import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
 import conversationRoutes from './routes/conversationRoutes';
 import interviewRoutes from './routes/interviewRoutes';
+import dashboardRoutes from './routes/dashboardRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/conversations', conversationRoutes);
 app.use('/api/interviews', interviewRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'AI Interview Assistant API is running' });

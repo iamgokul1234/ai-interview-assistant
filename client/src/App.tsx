@@ -12,6 +12,7 @@ import RegisterPage from "./pages/RegisterPage";
 import ChatPage from "./pages/ChatPage";
 import InterviewPage from "./pages/InterviewPage";
 import InterviewReportPage from "./pages/InterviewReportPage";
+import DashboardPage from "./pages/DashboardPage";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -98,6 +99,14 @@ function App() {
           element={
             <ProtectedRoute>
               <InterviewReportPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
             </ProtectedRoute>
           }
         />

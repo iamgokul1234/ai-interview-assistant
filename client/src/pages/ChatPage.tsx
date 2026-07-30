@@ -260,6 +260,19 @@ function ChatPage() {
           🎯 Mock Interview
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/dashboard")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(59,130,246,0.15)",
+            borderColor: "rgba(59,130,246,0.3)",
+            color: "#60a5fa",
+          }}
+        >
+          📊 Dashboard
+        </button>
+
         <div className="conversations-list">
           {conversations.map((conv) => (
             <div
