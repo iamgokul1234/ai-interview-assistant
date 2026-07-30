@@ -246,6 +246,18 @@ function ResumeReviewPage() {
           💻 Coding Challenge
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate('/daily')}
+          style={{
+            background: 'rgba(249,115,22,0.15)',
+            borderColor: 'rgba(249,115,22,0.3)',
+            color: '#fb923c',
+          }}
+        >
+          🔥 Daily Challenge
+        </button>
+
         <div style={{ flex: 1 }} />
 
         <div className="sidebar-footer">

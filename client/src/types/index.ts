@@ -303,3 +303,39 @@ export interface CodingState {
   loading: boolean;
   error: string | null;
 }
+
+// ─── Daily Challenge Types ────────────────────────────────────────────────────
+
+export type DailyQuestionType = 'mcq' | 'short-answer' | 'code-snippet';
+
+export interface DailyChallenge {
+  _id: string;
+  date: string;
+  type: DailyQuestionType;
+  question: string;
+  options?: string[];
+  starterCode?: string;
+  isSolvedToday?: boolean;
+}
+
+export interface DailyStreak {
+  currentStreak: number;
+  longestStreak: number;
+  totalSolved: number;
+  isSolvedToday: boolean;
+}
+
+export interface DailySubmissionResult {
+  correct: boolean;
+  explanation: string;
+  userAnswer: string | number;
+  streak: DailyStreak;
+}
+
+export interface DailyState {
+  challenge: DailyChallenge | null;
+  streak: DailyStreak | null;
+  lastResult: DailySubmissionResult | null;
+  loading: boolean;
+  error: string | null;
+}

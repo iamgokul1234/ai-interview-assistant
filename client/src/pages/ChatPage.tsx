@@ -338,6 +338,19 @@ function ChatPage() {
           💻 Coding Challenge
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/daily")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(249,115,22,0.15)",
+            borderColor: "rgba(249,115,22,0.3)",
+            color: "#fb923c",
+          }}
+        >
+          🔥 Daily Challenge
+        </button>
+
         <div className="conversations-list">
           {conversations.map((conv) => (
             <div
