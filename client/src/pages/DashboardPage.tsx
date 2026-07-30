@@ -200,6 +200,18 @@ function DashboardPage() {
           🃏 Flash Cards
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate('/bookmarks')}
+          style={{
+            background: 'rgba(234,179,8,0.15)',
+            borderColor: 'rgba(234,179,8,0.3)',
+            color: '#fde047',
+          }}
+        >
+          🔖 Bookmarks
+        </button>
+
         <div style={{ flex: 1 }} />
 
         <div className="sidebar-footer">

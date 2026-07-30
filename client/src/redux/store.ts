@@ -9,6 +9,7 @@ import careerReducer from './slices/careerSlice';
 import codingReducer from './slices/codingSlice';
 import dailyReducer from './slices/dailySlice';
 import flashcardReducer from './slices/flashcardSlice';
+import bookmarkReducer from './slices/bookmarkSlice';
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
     coding: codingReducer,
     daily: dailyReducer,
     flashcard: flashcardReducer,
+    bookmark: bookmarkReducer,
   },
 });
 

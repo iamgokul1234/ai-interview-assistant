@@ -19,6 +19,7 @@ import {
   deleteConversationAPI,
   deleteMessagesFromAPI,
 } from "../services/chatService";
+import { createBookmarkAPI } from "../services/bookmarkService";
 import ReactMarkdown from "react-markdown";
 
 function ChatPage() {
@@ -199,6 +200,24 @@ function ChatPage() {
     }
   };
 
+  const handleBookmarkMessage = async (msgIndex: number, content: string) => {
+    if (!token) return;
+    const prevMsg = messages[msgIndex - 1];
+    const questionText = prevMsg?.role === "user" ? prevMsg.content : "AI Response";
+
+    try {
+      await createBookmarkAPI(token, {
+        question: questionText,
+        answer: content,
+        category: "General",
+        source: "chat",
+      });
+      alert("✅ Bookmarked successfully!");
+    } catch {
+      alert("⚠️ Failed to bookmark response.");
+    }
+  };
+
   const handleEditCancel = () => {
     setEditingMessageId(null);
     setEditingContent("");
@@ -362,6 +381,19 @@ function ChatPage() {
           }}
         >
           🃏 Flash Cards
+        </button>
+
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/bookmarks")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(234,179,8,0.15)",
+            borderColor: "rgba(234,179,8,0.3)",
+            color: "#fde047",
+          }}
+        >
+          🔖 Bookmarks
         </button>
 
         <div className="conversations-list">
@@ -532,8 +564,26 @@ function ChatPage() {
                   )}
                 </div>
               ) : (
-                <div className="message-bubble assistant">
-                  <ReactMarkdown>{msg.content}</ReactMarkdown>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "6px", maxWidth: "80%" }}>
+                  <div className="message-bubble assistant">
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  </div>
+                  {hoveredMessageId === msg._id && (
+                    <button
+                      onClick={() => handleBookmarkMessage(messages.findIndex(m => m._id === msg._id), msg.content)}
+                      style={{
+                        background: "rgba(234,179,8,0.15)",
+                        border: "1px solid rgba(234,179,8,0.3)",
+                        color: "#fde047",
+                        padding: "4px 10px",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        fontSize: "12px",
+                      }}
+                    >
+                      🔖 Bookmark
+                    </button>
+                  )}
                 </div>
               )}
             </div>

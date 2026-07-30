@@ -368,3 +368,44 @@ export interface FlashcardState {
   loading: boolean;
   error: string | null;
 }
+
+// ─── Bookmark Types ───────────────────────────────────────────────────────────
+
+export type BookmarkCategory =
+  | 'React'
+  | 'Node.js'
+  | 'System Design'
+  | 'Behavioral'
+  | 'SQL'
+  | 'DSA'
+  | 'General';
+
+export type BookmarkSource =
+  | 'chat'
+  | 'interview'
+  | 'coding'
+  | 'daily'
+  | 'flashcards'
+  | 'custom';
+
+export interface Bookmark {
+  _id: string;
+  userId: string;
+  question: string;
+  answer: string;
+  category: BookmarkCategory;
+  starRating: number;
+  customNotes?: string;
+  source: BookmarkSource;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BookmarkState {
+  bookmarks: Bookmark[];
+  loading: boolean;
+  error: string | null;
+  activeCategory: string;
+  searchQuery: string;
+  minRating: number;
+}
