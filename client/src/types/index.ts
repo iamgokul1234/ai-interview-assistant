@@ -211,3 +211,51 @@ export interface ResumeState {
   loading: boolean;
   error: string | null;
 }
+
+// ─── Career Coach Types ───────────────────────────────────────────────────────
+
+export type ExperienceLevel = 'fresher' | '1-2 years' | '3-5 years' | '5+ years';
+export type TargetRole =
+  | 'Frontend'
+  | 'Backend'
+  | 'Fullstack'
+  | 'DevOps'
+  | 'Data Engineer'
+  | 'ML Engineer';
+
+export interface MonthlyMilestone {
+  month: number;
+  title: string;
+  focus: string;
+  keyDeliverables: string[];
+}
+
+export interface WeeklyPlanItem {
+  week: number;
+  topic: string;
+  tasks: string[];
+}
+
+export interface CareerPlan {
+  _id: string;
+  userId: string;
+  experience: ExperienceLevel;
+  currentSkills: string[];
+  targetRole: TargetRole;
+  targetCompany?: string;
+  targetSalary?: string;
+  roadmap6Month: MonthlyMilestone[];
+  weeklyLearningPlan: WeeklyPlanItem[];
+  recommendedProjects: string[];
+  recommendedCertifications: string[];
+  skillGapAnalysis: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CareerState {
+  plans: CareerPlan[];
+  currentPlan: CareerPlan | null;
+  loading: boolean;
+  error: string | null;
+}

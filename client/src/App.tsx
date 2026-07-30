@@ -15,6 +15,7 @@ import InterviewReportPage from "./pages/InterviewReportPage";
 import DashboardPage from "./pages/DashboardPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import ResumeReviewPage from "./pages/ResumeReviewPage";
+import CareerCoachPage from "./pages/CareerCoachPage";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -125,6 +126,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ResumeReviewPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/career"
+          element={
+            <ProtectedRoute>
+              <CareerCoachPage />
             </ProtectedRoute>
           }
         />

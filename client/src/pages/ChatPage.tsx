@@ -312,6 +312,19 @@ function ChatPage() {
           📄 Resume Review
         </button>
 
+        <button
+          className="btn-new-chat"
+          onClick={() => navigate("/career")}
+          style={{
+            marginBottom: "8px",
+            background: "rgba(99,102,241,0.15)",
+            borderColor: "rgba(99,102,241,0.3)",
+            color: "#818cf8",
+          }}
+        >
+          🧭 Career Coach
+        </button>
+
         <div className="conversations-list">
           {conversations.map((conv) => (
             <div
