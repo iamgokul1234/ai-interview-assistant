@@ -14,6 +14,11 @@ export const sendPasswordResetEmail = async (
 ): Promise<void> => {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
+  console.log('EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'NOT SET');
+  console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'NOT SET');
+  console.log('CLIENT_URL:', process.env.CLIENT_URL);
+  console.log('Reset URL:', resetUrl);
+
   const mailOptions = {
     from: `"AI Interview Assistant" <${process.env.EMAIL_USER}>`,
     to: email,
@@ -43,5 +48,11 @@ export const sendPasswordResetEmail = async (
     `,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully:', info.messageId);
+  } catch (error: any) {
+    console.error('Email sending failed:', error.message);
+    throw error;
+  }
 };
