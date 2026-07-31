@@ -1,13 +1,17 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import type { RootState, AppDispatch } from '../redux/store';
-import { loginStart, loginSuccess, loginFailure } from '../redux/slices/authSlice';
-import { loginAPI } from '../services/authService';
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import type { RootState, AppDispatch } from "../redux/store";
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+} from "../redux/slices/authSlice";
+import { loginAPI } from "../services/authService";
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.auth);
@@ -18,9 +22,9 @@ function LoginPage() {
     try {
       const data = await loginAPI(email, password);
       dispatch(loginSuccess({ user: data.user, token: data.token }));
-      navigate('/chat');
+      navigate("/chat");
     } catch (err: any) {
-      dispatch(loginFailure(err.response?.data?.message || 'Login failed'));
+      dispatch(loginFailure(err.response?.data?.message || "Login failed"));
     }
   };
 
@@ -57,17 +61,23 @@ function LoginPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="btn-gradient"
-            disabled={loading}
-          >
-            {loading ? 'Logging in...' : 'Login'}
+          <div style={{ textAlign: "right", marginBottom: "16px" }}>
+            <Link
+              to="/forgot-password"
+              className="auth-link"
+              style={{ fontSize: "13px" }}
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
+          <button type="submit" className="btn-gradient" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
         <p className="auth-footer">
-          Don't have an account?{' '}
+          Don't have an account?{" "}
           <Link to="/register" className="auth-link">
             Register here
           </Link>

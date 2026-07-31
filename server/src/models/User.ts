@@ -15,6 +15,8 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  resetToken?: string;
+  resetTokenExpiry?: Date;
   settings?: IUserSettings;
   createdAt: Date;
   updatedAt: Date;
@@ -38,6 +40,12 @@ const UserSchema: Schema = new Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: 6,
+    },
+    resetToken: {
+      type: String,
+    },
+    resetTokenExpiry: {
+      type: Date,
     },
     settings: {
       targetRole: { type: String, default: 'Full Stack Developer' },

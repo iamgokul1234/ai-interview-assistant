@@ -21,6 +21,8 @@ import DailyChallengePage from "./pages/DailyChallengePage";
 import FlashcardPage from "./pages/FlashcardPage";
 import BookmarksPage from "./pages/BookmarksPage";
 import SettingsPage from "./pages/SettingsPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -78,6 +80,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route
           path="/chat"
           element={
