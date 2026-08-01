@@ -1,12 +1,6 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendPasswordResetEmail = async (
   email: string,
@@ -14,13 +8,8 @@ export const sendPasswordResetEmail = async (
 ): Promise<void> => {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-  console.log('EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'NOT SET');
-  console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'NOT SET');
-  console.log('CLIENT_URL:', process.env.CLIENT_URL);
-  console.log('Reset URL:', resetUrl);
-
-  const mailOptions = {
-    from: `"AI Interview Assistant" <${process.env.EMAIL_USER}>`,
+  const { error } = await resend.emails.send({
+    from: 'AI Interview Assistant <onboarding@resend.dev>',
     to: email,
     subject: 'Password Reset Request',
     html: `
@@ -46,13 +35,12 @@ export const sendPasswordResetEmail = async (
         </p>
       </div>
     `,
-  };
+  });
 
-  try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.messageId);
-  } catch (error: any) {
-    console.error('Email sending failed:', error.message);
-    throw error;
+  if (error) {
+    console.error('Resend email error:', error);
+    throw new Error(error.message);
   }
+
+  console.log('Email sent successfully to:', email);
 };
